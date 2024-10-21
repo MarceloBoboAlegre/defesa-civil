@@ -7,6 +7,10 @@ html, body, #map {
     width: 100vw;
 }
 
+#map:hover {
+    cursor: pointer;
+}
+
 /* Estilos do modal */
 .modal {
     display: none;
