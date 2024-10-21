@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa com Formulário sobreposto</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+
+        /* Estilos do modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999; /* Certifique-se de que o modal tenha um z-index mais alto que o mapa */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            z-index: 10000; /* Garantir que o conteúdo do modal tenha o z-index mais alto */
+        }
+
+        .close {
+            color: red;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: darkred;
+        }
+
+        /* Estilos do botão dentro do mapa */
+        .leaflet-control-custom {
+            background-color: white;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Exemplo de Mapa Leaflet com Formulário sobreposto</h2>
+
+    <!-- Mapa Leaflet -->
+    <div id="map"></div>
+
+    <!-- Modal do Formulário -->
+    <div id="modalFormulario" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Formulário de Cadastro</h3>
+            <form id="formCadastro">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required><br><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="latitude">Latitude:</label>
+                <input type="text" id="latitude" name="latitude" readonly><br><br>
+
+                <label for="longitude">Longitude:</label>
+                <input type="text" id="longitude" name="longitude" readonly><br><br>
+
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        // Inicializando o mapa e configurando a posição inicial e o nível de zoom
+        var map = L.map('map', {
+            zoomControl: false // Desativa os controles de zoom padrão
+        }).setView([-23.5505, -46.6333], 13); // São Paulo como exemplo
+
+        // Adicionando uma camada de mapa (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Variáveis para armazenar as coordenadas
+        var lastLat = null;
+        var lastLng = null;
+
+        // Criando um controle customizado para adicionar o botão de abrir formulário
+        var customControl = L.Control.extend({
+            options: {
+                position: 'topleft'  // Posição do botão no canto superior esquerdo
+            },
+
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'leaflet-control-custom');
+
+                // Criando o botão
+                var btn = L.DomUtil.create('button', '', container);
+                btn.innerHTML = 'Abrir Formulário';
+                btn.style.backgroundColor = 'white';
+                btn.style.padding = '10px';
+                btn.style.borderRadius = '5px';
+                btn.style.cursor = 'pointer';
+                btn.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.3)';
+
+                // Função para abrir o formulário modal quando o botão for clicado
+                btn.onclick = function(e) {
+                    L.DomEvent.stopPropagation(e); // Evita que o evento de clique se propague para o mapa
+
+                    // Apenas abre o modal se as coordenadas já tiverem sido clicadas
+                    if (lastLat !== null && lastLng !== null) {
+                        // Preenchendo os campos do formulário com as coordenadas armazenadas
+                        document.getElementById('latitude').value = lastLat;
+                        document.getElementById('longitude').value = lastLng;
+
+                        // Abrindo o modal
+                        modal.style.display = "block";
+                    } else {
+                        alert("Por favor, clique no mapa para definir as coordenadas antes de abrir o formulário.");
+                    }
+                };
+
+                return container;
+            }
+        });
+
+        // Adicionando o controle com o botão ao mapa
+        map.addControl(new customControl());
+
+        // Adicionando controles de zoom no canto superior direito
+        L.control.zoom({
+            position: 'topright' // Posiciona os controles de zoom no canto superior direito
+        }).addTo(map);
+
+        // Função para lidar com o clique no mapa
+        function onMapClick(e) {
+            lastLat = e.latlng.lat; // Armazenando a latitude do clique
+            lastLng = e.latlng.lng; // Armazenando a longitude do clique
+
+            // Preenchendo os campos do formulário com as coordenadas
+            document.getElementById('latitude').value = lastLat;
+            document.getElementById('longitude').value = lastLng;
+
+            // Abrindo o formulário modal
+            modal.style.display = "block";
+        }
+
+        // Adicionando o evento de clique no mapa
+        map.on('click', onMapClick);
+
+        // Modal do Formulário
+        var modal = document.getElementById("modalFormulario");
+        var spanFechar = document.getElementsByClassName("close")[0];
+
+        // Quando o "X" for clicado, fecha o modal
+        spanFechar.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Quando clicar fora do modal, também fecha
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
