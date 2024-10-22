@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defesa Civil</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Mapa Leaflet -->
+    <div id="map"></div>
+
+    <!-- Offcanvas do Bootstrap -->
+    <div class="offcanvas offcanvas-top h-75 shadow-sm" tabindex="-1" id="offcanvasForm" aria-labelledby="offcanvasFormLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasFormLabel">Formulário de Cadastro</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="formCadastro" action="/cadastrar" method="post">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <input type="text" class="form-control" id="nome" name="nome" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="latitude" class="form-label">Latitude:</label>
+                    <input type="text" class="form-control" id="latitude" name="latitude" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="longitude" class="form-label">Longitude:</label>
+                    <input type="text" class="form-control" id="longitude" name="longitude" readonly>
+                </div>
+                <button type="submit" value="Cadastrar" class="btn btn-primary">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Inicializando o mapa e configurando a posição inicial e o nível de zoom
+        var map = L.map('map', {
+            zoomControl: false // Desativa os controles de zoom padrão
+        }).setView([-23.79, -45.40], 13); // São Paulo como exemplo
+
+        // Camada do OpenStreetMap
+        var openStreetMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        // Camada do Esri World Imagery (satélite) corrigida
+        var esriWorldImageryLayer = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+        // Adiciona o OpenStreetMap como camada inicial
+        openStreetMapLayer.addTo(map);
+
+        // Variáveis para armazenar as coordenadas
+        var lastLat = null;
+        var lastLng = null;
+
+        // Função para lidar com o clique no mapa
+        function onMapClick(e) {
+            lastLat = e.latlng.lat; // Armazenando a latitude do clique
+            lastLng = e.latlng.lng; // Armazenando a longitude do clique
+
+            // Preenchendo os campos do formulário com as coordenadas
+            document.getElementById('latitude').value = lastLat;
+            document.getElementById('longitude').value = lastLng;
+
+            // Abrindo o offcanvas quando o mapa é clicado
+            var offcanvasElement = new bootstrap.Offcanvas(document.getElementById('offcanvasForm'));
+            offcanvasElement.show();
+        }
+
+        // Adicionando o evento de clique no mapa
+        map.on('click', onMapClick);
+
+        // Controle customizado para alternar entre as camadas de mapa
+        var customControl = L.Control.extend({
+            options: {
+                position: 'topleft'  // Posição do controle no canto superior esquerdo
+            },
+
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'leaflet-control-custom');
+
+                // Criando o botão para abrir o formulário
+                var btnForm = L.DomUtil.create('button', 'btn btn-primary mb-2', container);
+                btnForm.innerHTML = 'Abrir Formulário';
+                btnForm.style.padding = '10px';
+
+                // Função para abrir o offcanvas quando o botão for clicado
+                btnForm.onclick = function(e) {
+                    L.DomEvent.stopPropagation(e); // Evita que o evento de clique se propague para o mapa
+
+                    // Apenas abre o offcanvas se as coordenadas já tiverem sido clicadas
+                    if (lastLat !== null && lastLng !== null) {
+                        // Preenchendo os campos do formulário com as coordenadas armazenadas
+                        document.getElementById('latitude').value = lastLat;
+                        document.getElementById('longitude').value = lastLng;
+
+                        // Abrindo o offcanvas
+                        var offcanvasElement = new bootstrap.Offcanvas(document.getElementById('offcanvasForm'));
+                        offcanvasElement.show();
+                    } else {
+                        alert("Por favor, clique no mapa para definir as coordenadas antes de abrir o formulário.");
+                    }
+                };
+
+                // Criando o botão para alternar entre as camadas de mapa
+                var btnLayerToggle = L.DomUtil.create('button', 'btn btn-secondary', container);
+                btnLayerToggle.innerHTML = 'Alternar Mapa';
+                btnLayerToggle.style.padding = '10px';
+
+                var currentLayer = 'osm'; // Variável para controlar qual camada está ativa
+
+                // Função para alternar entre OpenStreetMap e Esri World Imagery
+                btnLayerToggle.onclick = function(e) {
+                    L.DomEvent.stopPropagation(e); // Evita que o clique no botão seja interpretado como clique no mapa
+
+                    if (currentLayer === 'osm') {
+                        map.removeLayer(openStreetMapLayer);
+                        esriWorldImageryLayer.addTo(map);
+                        currentLayer = 'esri';
+                    } else {
+                        map.removeLayer(esriWorldImageryLayer);
+                        openStreetMapLayer.addTo(map);
+                        currentLayer = 'osm';
+                    }
+                };
+
+                return container;
+            }
+        });
+
+        // Adicionando o controle customizado ao mapa
+        map.addControl(new customControl());
+
+        // Adicionando controles de zoom no canto superior direito
+        L.control.zoom({
+            position: 'topright' // Posiciona os controles de zoom no canto superior direito
+        }).addTo(map);
+
+        // Função para enviar os dados do formulário e adicionar o marker
+        document.getElementById('formCadastro').addEventListener('submit', function(event) {
+            event.preventDefault(); // Previne o recarregamento da página
+
+            // Obtendo os dados do formulário
+            var nome = document.getElementById('nome').value;
+            var email = document.getElementById('email').value;
+            var latitude = document.getElementById('latitude').value;
+            var longitude = document.getElementById('longitude').value;
+
+            // Enviando os dados para o Flask via POST
+            fetch('http://127.0.0.1:5000/cadastrar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `nome=${encodeURIComponent(nome)}&email=${encodeURIComponent(email)}&latitude=${latitude}&longitude=${longitude}`
+            })
+            // Limpa o formulário
+            document.getElementById('formCadastro').reset();
+
+            // Fecha o formulário (offcanvas)
+            var offcanvasElement = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasForm'));
+            offcanvasElement.hide();
+
+            // Recarrega a página após um pequeno atraso (500ms) para garantir que tudo foi atualizado
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        });
+    </script>
+    {% for m in range(0, marcador[0]) %}
+        <script>
+            var lat = {{marcador[1][m][2]}}
+            var lng = {{marcador[1][m][3]}}
+            var marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup("<b>Lat: " + lat + "</b>").openPopup();
+        </script>
+    {% endfor %}
+</body>
+</html>

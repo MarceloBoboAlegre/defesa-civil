@@ -1,0 +1,40 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #map {
+    height: 100%;
+    width: 100vw;
+}
+
+#map:hover {
+    cursor: pointer;
+}
+
+.close {
+    color: red;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: darkred;
+}
+
+/* Estilos para os botões customizados no mapa */
+.leaflet-control-custom {
+    display: flex;
+    flex-direction: column; /* Coloca os botões em uma coluna */
+    align-items: flex-start; /* Alinha os botões à esquerda */
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-control-custom button {
+    margin-bottom: 5px; /* Espaçamento entre os botões */
+    width: 120px; /* Define uma largura fixa para os botões */
+}
