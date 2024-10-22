@@ -179,13 +179,88 @@
                 window.location.reload();
             }, 500);
         });
+
+        var tam = 40
+        var met = tam/2
+
+        var greenCircle = L.icon({
+            iconUrl: '/static/imagens/green_cl.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var greenSquare = L.icon({
+            iconUrl: '/static/imagens/green_sq.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var greenTriangle = L.icon({
+            iconUrl: '/static/imagens/green_tr.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var yellowCircle = L.icon({
+            iconUrl: '/static/imagens/yellow_cl.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var yellowSquare = L.icon({
+            iconUrl: '/static/imagens/yellow_sq.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var yellowTriangle = L.icon({
+            iconUrl: '/static/imagens/yellow_tr.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var redCircle = L.icon({
+            iconUrl: '/static/imagens/red_cl.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var redTriangle = L.icon({
+            iconUrl: '/static/imagens/red_tr.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var redSquare = L.icon({
+            iconUrl: '/static/imagens/red_sq.png',
+
+            iconSize:     [tam, tam], // size of the icon
+            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+        });
     </script>
     {% for m in range(0, marcador[0]) %}
         <script>
             var lat = {{marcador[1][m][2]}}
             var lng = {{marcador[1][m][3]}}
-            var marker = L.marker([lat, lng]).addTo(map);
-            marker.bindPopup("<b>Lat: " + lat + "</b>").openPopup();
+            var marker = L.marker([lat, lng], {icon: greenCircle}).addTo(map);
+            marker.bindPopup("<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
         </script>
     {% endfor %}
 </body>
