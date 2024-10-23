@@ -46,8 +46,8 @@ def get_markers():
     db = conectar_bd('localhost', 'root', '', 'defesa')
     myc = cursor_on(db)
 
-    query = "SELECT nome, email, latitude, longitude FROM cadastros"
-    myc.execute(query)
+    sql = "SELECT nome, email, latitude, longitude FROM cadastros"
+    myc.execute(sql)
     markers = myc.fetchall()
 
     turnoff(myc, db)
