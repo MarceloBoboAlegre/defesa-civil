@@ -22,7 +22,7 @@ def turnoff(cursor, database):
 
 
 def cadastro(nome, email, latitude, longitude):
-    db = conectar_bd('localhost', 'root', 'Coisadenerd2431$', 'defesa')
+    db = conectar_bd('localhost', 'root', '', 'defesa')
     myc = cursor_on(db)
 
     sql = ('INSERT INTO cadastros (NOME, EMAIL, LATITUDE, LONGITUDE) VALUES (%s, %s, %s, %s)')
@@ -39,7 +39,7 @@ def cadastro(nome, email, latitude, longitude):
 
 
 def get_markers():
-    db = conectar_bd('localhost', 'root', 'Coisadenerd2431$', 'defesa')
+    db = conectar_bd('localhost', 'root', '', 'defesa')
     myc = cursor_on(db)
 
     sql = "SELECT nome, email, latitude, longitude FROM cadastros"
