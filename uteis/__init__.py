@@ -21,7 +21,7 @@ def turnoff(cursor, database):
     database.close()
 
 
-def cadastro(nome, email, latitude, longitude, formato):
+def cadastro(nome, email, latitude, longitude, formato, imagens):
     db = conectar_bd('localhost', 'root', '', 'defesa')
     myc = cursor_on(db)
 
@@ -33,7 +33,14 @@ def cadastro(nome, email, latitude, longitude, formato):
         print('Erro')
     else:
         db.commit()
-        last_id = myc.lastrowid
+        cadastro_id = myc.lastrowid
+    # Processar cada imagem
+    for imagem in imagens:
+            if imagem.filename == '':
+                continue
+            sql_imagem = "INSERT INTO imagens (cadastro_id, caminho) VALUES (%s, %s)"
+            myc.execute(sql_imagem, (cadastro_id, imagem.filename))
+            db.commit()
     turnoff(myc, db)
 
 

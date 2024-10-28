@@ -50,6 +50,10 @@
                             <option value="redTriangle">redTriangle</option>
                         </select>
                 </div>
+                <div class="mb-3">
+                    <label for="imagens" class="form-label">Imagens</label>
+                    <input type="file" class="form-control" id="imagens" name="imagens" multiple accept="image/*">
+                </div>
                 <button type="submit" value="Cadastrar" class="btn btn-primary">Cadastrar</button>
             </form>
         </div>
@@ -167,21 +171,26 @@
         document.getElementById('formCadastro').addEventListener('submit', function(event) {
             event.preventDefault(); // Previne o recarregamento da página
 
-            // Obtendo os dados do formulário
-            var nome = document.getElementById('nome').value;
-            var email = document.getElementById('email').value;
-            var latitude = document.getElementById('latitude').value;
-            var longitude = document.getElementById('longitude').value;
-            var formato = document.getElementById('formato').value;
+            const formData = new FormData();
+    
+            formData.append('nome', document.getElementById('nome').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('latitude', document.getElementById('latitude').value);
+            formData.append('longitude', document.getElementById('longitude').value);
+            formData.append('formato', document.getElementById('formato').value);
 
-            // Enviando os dados para o Flask via POST
-            fetch('http://127.0.0.1:5000/cadastrar', {
+            const imagens = document.getElementById('imagens').files;
+            for (let i = 0; i < imagens.length; i++) {
+                formData.append('imagens', imagens[i]);
+            }
+
+            fetch('http://localhost:5000/cadastrar', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `nome=${encodeURIComponent(nome)}&email=${encodeURIComponent(email)}&latitude=${latitude}&longitude=${longitude}&formato=${formato}`
+                body: formData
             })
+            .then(response => response.json())
+        
+
             // Limpa o formulário
             document.getElementById('formCadastro').reset();
 
