@@ -21,12 +21,12 @@ def turnoff(cursor, database):
     database.close()
 
 
-def cadastro(nome, email, latitude, longitude):
-    db = conectar_bd('localhost', 'root', '', 'defesa')
+def cadastro(nome, email, latitude, longitude, formato):
+    db = conectar_bd('localhost', 'root', 'Coisadenerd2431$', 'defesa')
     myc = cursor_on(db)
 
-    sql = ('INSERT INTO cadastros (NOME, EMAIL, LATITUDE, LONGITUDE) VALUES (%s, %s, %s, %s)')
-    val = (nome, email, latitude, longitude)
+    sql = ('INSERT INTO cadastros (NOME, EMAIL, LATITUDE, LONGITUDE, FORMATO) VALUES (%s, %s, %s, %s, %s)')
+    val = (nome, email, latitude, longitude, formato)
     try:
         myc.execute(sql, val)
     except:
@@ -34,15 +34,14 @@ def cadastro(nome, email, latitude, longitude):
     else:
         db.commit()
         last_id = myc.lastrowid
-        print('Sucesso')
     turnoff(myc, db)
 
 
 def get_markers():
-    db = conectar_bd('localhost', 'root', '', 'defesa')
+    db = conectar_bd('localhost', 'root', 'Coisadenerd2431$', 'defesa')
     myc = cursor_on(db)
 
-    sql = "SELECT nome, email, latitude, longitude FROM cadastros"
+    sql = "SELECT nome, email, latitude, longitude, formato FROM cadastros"
     myc.execute(sql)
     markers = myc.fetchall()
 

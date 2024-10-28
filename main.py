@@ -21,7 +21,8 @@ def cadastrar():
     email = request.form.get('email')
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')
-    cadastro(nome, email, latitude, longitude)
+    formato =  request.form.get('formato')
+    cadastro(nome, email, latitude, longitude, formato)
 
 
 # Iniciar o servidor Flask

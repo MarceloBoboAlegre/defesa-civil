@@ -36,6 +36,20 @@
                     <label for="longitude" class="form-label">Longitude:</label>
                     <input type="text" class="form-control" id="longitude" name="longitude" readonly>
                 </div>
+                <div class="mb-3">
+                    <label for="formato" class="form-label">Formato:</label>
+                        <select class="form-select" id="formato" name="formato">
+                            <option value="greenCircle">greenCircle</option>
+                            <option value="greenSquare">greenSquare</option>
+                            <option value="greenTriangle">greenTriangle</option>
+                            <option value="yellowCircle">yellowCircle</option>
+                            <option value="yellowSquare">yellowSquare</option>
+                            <option value="yellowTriangle">yellowTriangle</option>
+                            <option value="redCircle">redCircle</option>
+                            <option value="redSquare">redSquare</option>
+                            <option value="redTriangle">redTriangle</option>
+                        </select>
+                </div>
                 <button type="submit" value="Cadastrar" class="btn btn-primary">Cadastrar</button>
             </form>
         </div>
@@ -158,6 +172,7 @@
             var email = document.getElementById('email').value;
             var latitude = document.getElementById('latitude').value;
             var longitude = document.getElementById('longitude').value;
+            var formato = document.getElementById('formato').value;
 
             // Enviando os dados para o Flask via POST
             fetch('http://127.0.0.1:5000/cadastrar', {
@@ -165,7 +180,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `nome=${encodeURIComponent(nome)}&email=${encodeURIComponent(email)}&latitude=${latitude}&longitude=${longitude}`
+                body: `nome=${encodeURIComponent(nome)}&email=${encodeURIComponent(email)}&latitude=${latitude}&longitude=${longitude}&formato=${formato}`
             })
             // Limpa o formulário
             document.getElementById('formCadastro').reset();
@@ -180,88 +195,89 @@
             }, 500);
         });
 
-        var tam = 40
-        var met = tam/2
+        var tam = 40 //Tamanho do ícone
+        var met = tam/2 //Colocação do ícone relativa a localização real
 
         var greenCircle = L.icon({
             iconUrl: '/static/imagens/green_cl.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var greenSquare = L.icon({
             iconUrl: '/static/imagens/green_sq.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var greenTriangle = L.icon({
             iconUrl: '/static/imagens/green_tr.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var yellowCircle = L.icon({
             iconUrl: '/static/imagens/yellow_cl.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var yellowSquare = L.icon({
             iconUrl: '/static/imagens/yellow_sq.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var yellowTriangle = L.icon({
             iconUrl: '/static/imagens/yellow_tr.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var redCircle = L.icon({
             iconUrl: '/static/imagens/red_cl.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var redTriangle = L.icon({
             iconUrl: '/static/imagens/red_tr.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
 
         var redSquare = L.icon({
             iconUrl: '/static/imagens/red_sq.png',
 
-            iconSize:     [tam, tam], // size of the icon
-            iconAnchor:   [met, met], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
         });
     </script>
 
     <!-- Coloca os marcadores no lugar -->
     {% for m in range(0, marcador[0]) %}
         <script>
-            var lat = {{ marcador[1][m][2]|tojson }};
-            var lng = {{ marcador[1][m][3]|tojson }};
-            var marker = L.marker([lat, lng], {icon: greenCircle}).addTo(map);
+            var lat = {{ marcador[1][m][2]|tojson }}; //Variável latitude trazida do banco de dados
+            var lng = {{ marcador[1][m][3]|tojson }}; //Variável longitude trazida do banco de dados
+            var forma = {{ marcador[1][m][4]}}; //Formato do ícone trazido do banco de dados
+            var marker = L.marker([lat, lng], {icon: forma}).addTo(map);
             marker.bindPopup("<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
         </script>
     {% endfor %}
