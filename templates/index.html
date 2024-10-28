@@ -255,10 +255,12 @@
             popupAnchor:  [-1, -1] // point from which the popup should open relative to the iconAnchor
         });
     </script>
+
+    <!-- Coloca os marcadores no lugar -->
     {% for m in range(0, marcador[0]) %}
         <script>
-            var lat = {{marcador[1][m][2]}}
-            var lng = {{marcador[1][m][3]}}
+            var lat = {{ marcador[1][m][2]|tojson }};
+            var lng = {{ marcador[1][m][3]|tojson }};
             var marker = L.marker([lat, lng], {icon: greenCircle}).addTo(map);
             marker.bindPopup("<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
         </script>
