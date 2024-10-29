@@ -56,3 +56,22 @@ def get_markers():
 
     lista = list(markers)
     return lista
+
+
+def gerador_pdf(nome):
+    db = conectar_bd('localhost', 'root', '', 'defesa')
+    myc = db.cursor(dictionary=True)
+
+    sql = "SELECT * FROM cadastros WHERE nome = %s"
+    val = (nome, )
+    myc.execute(sql, val)
+    cadastro = myc.fetchone()
+    id_cad = cadastro[0]
+
+    sql = "SELECT caminho FROM imagens WHERE cadastro_id = %s"
+    val = (id_cad, )
+    myc.execute(sql, val)
+    imagens = myc.fetchall()
+    turnoff(myc, db)
+    info = [cadastro, imagens]
+    return info

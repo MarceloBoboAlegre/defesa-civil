@@ -12,7 +12,7 @@
     <!-- Mapa Leaflet -->
     <div id="map"></div>
 
-    <!-- Offcanvas do Bootstrap -->
+    <!-- Offcanvas do Formulário -->
     <div class="offcanvas offcanvas-top h-75 shadow-sm" tabindex="-1" id="offcanvasForm" aria-labelledby="offcanvasFormLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasFormLabel">Formulário de Cadastro</h5>
@@ -59,6 +59,21 @@
         </div>
     </div>
 
+    <!-- Offcanvas de busca -->
+    <div class="offcanvas offcanvas-top h-75 shadow-sm" tabindex="-1" id="offcanvasSearch" aria-labelledby="offcanvasSearchLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasSearchLabel">Formulário de Cadastro</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-3">
+                <label for="searchNome" class="form-label">Nome do Cadastro</label>
+                <input type="text" class="form-control" id="searchNome" placeholder="Digite o Nome do cadastro">
+            </div>
+            <button class="btn btn-primary" onclick="buscarCadastroPDF()">Buscar</button>  
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -101,7 +116,7 @@
         // Adicionando o evento de clique no mapa
         map.on('click', onMapClick);
 
-        // Controle customizado para alternar entre as camadas de mapa
+        // Adicionando os botões de controle do mapa
         var customControl = L.Control.extend({
             options: {
                 position: 'topleft'  // Posição do controle no canto superior esquerdo
@@ -155,6 +170,20 @@
                     }
                 };
 
+                // Criando o botão para buscar
+                var btnSearch = L.DomUtil.create('button', 'btn btn-primary mb-2', container);
+                btnSearch.innerHTML = 'Buscar Cadastro';
+                btnSearch.style.padding = '10px';
+
+                // Função para abrir o offcanvas quando o botão for clicado
+                btnSearch.onclick = function(e) {
+                    L.DomEvent.stopPropagation(e); // Evita que o evento de clique se propague para o mapa
+
+                    // Abrindo o offcanvas
+                    var buscaOffcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasSearch'));
+                    buscaOffcanvas.show();
+                };
+
                 return container;
             }
         });
@@ -203,6 +232,25 @@
                 window.location.reload();
             }, 500);
         });
+
+        function buscarCadastroPDF() {
+            const searchNome = document.getElementById("searchNome").value;
+
+            fetch(`http://localhost:5000/gerar_pdf?nome=${searchNome}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao gerar o PDF");
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Cria um link temporário para baixar o PDF
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = `Cadastro_${searchNome}.pdf`;
+                    link.click();
+                    URL.revokeObjectURL(url); // Libera o URL temporário
+                })
+        }
 
         var tam = 40 //Tamanho do ícone
         var met = tam/2 //Colocação do ícone relativa a localização real
