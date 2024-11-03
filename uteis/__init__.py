@@ -1,12 +1,12 @@
 import mysql.connector
 
 
-def conectar_bd(h, u, pw, db):
+def conectar_bd():
     database = mysql.connector.connect(
-        host=h,
-        user=u,
-        password=pw,
-        database=db
+        host='localhost',
+        user='root',
+        password='',
+        database='defesa'
     )
     return database
 
@@ -22,7 +22,7 @@ def turnoff(cursor, database):
 
 
 def cadastro(nome, email, latitude, longitude, formato, imagens):
-    db = conectar_bd('localhost', 'root', '', 'defesa')
+    db = conectar_bd()
     myc = cursor_on(db)
 
     sql = ('INSERT INTO cadastros (NOME, EMAIL, LATITUDE, LONGITUDE, FORMATO) VALUES (%s, %s, %s, %s, %s)')
@@ -45,7 +45,7 @@ def cadastro(nome, email, latitude, longitude, formato, imagens):
 
 
 def get_markers():
-    db = conectar_bd('localhost', 'root', '', 'defesa')
+    db = conectar_bd()
     myc = cursor_on(db)
 
     sql = "SELECT nome, email, latitude, longitude, formato FROM cadastros"
@@ -59,7 +59,7 @@ def get_markers():
 
 
 def gerador_pdf(nome):
-    db = conectar_bd('localhost', 'root', '', 'defesa')
+    db = conectar_bd()
     myc = db.cursor(dictionary=True)
 
     sql = "SELECT * FROM cadastros WHERE nome = %s"
