@@ -66,7 +66,7 @@ def gerador_pdf(nome):
     val = (nome, )
     myc.execute(sql, val)
     cadastro = myc.fetchone()
-    id_cad = cadastro[0]
+    id_cad = cadastro['id']
 
     sql = "SELECT caminho FROM imagens WHERE cadastro_id = %s"
     val = (id_cad, )
