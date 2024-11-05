@@ -331,9 +331,9 @@
     <!-- Coloca os marcadores no lugar -->
     {% for m in range(0, marcador[0]) %}
         <script>
-            var lat = {{ marcador[1][m][2]|tojson }}; //Variável latitude trazida do banco de dados
-            var lng = {{ marcador[1][m][3]|tojson }}; //Variável longitude trazida do banco de dados
-            var forma = {{ marcador[1][m][4]}}; //Formato do ícone trazido do banco de dados
+            var lat = '{{ marcador[1][m][2]|tojson }}'; //Variável latitude trazida do banco de dados
+            var lng = '{{ marcador[1][m][3]|tojson }}'; //Variável longitude trazida do banco de dados
+            var forma = {{ marcador[1][m][4] }}; //Formato do ícone trazido do banco de dados
             var marker = L.marker([lat, lng], {icon: forma}).addTo(map);
             marker.bindPopup("<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
         </script>
