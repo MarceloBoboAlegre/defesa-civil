@@ -1,11 +1,21 @@
 from flask import Flask, request, render_template, send_file, redirect
 from uteis import cadastro, get_markers, gerador_pdf
+from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+import os
 
 
 app = Flask(__name__)
+CORS(app)  # Permite CORS para todas as rotas e origens
 app.config['SECRET_KEY'] = 'CivDef321'
+
+# Configuração da pasta onde as imagens serão salvas
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Criar a pasta de uploads se não existir
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Rota padrão
 @app.route('/')
@@ -25,6 +35,8 @@ def cadastrar():
     longitude = request.form.get('longitude')
     formato =  request.form.get('formato')
     imagens = request.files.getlist('imagens')
+    for i in imagens:
+        i.save(os.path.join(app.config['UPLOAD_FOLDER'], i.filename))
     cadastro(nome, email, latitude, longitude, formato, imagens)
 
 
@@ -53,23 +65,20 @@ def gerar_pdf():
     c.drawString(100, height - 170, f"Forma: {cadastroo['formato']}")
 
     # Adicionando imagens ao PDF
-    """
     y_position = height - 210
     for i, img in enumerate(imagens):
+        print(img['caminho'])
         c.drawString(100, y_position, f"Imagem {i + 1}")
         try:
-            c.drawImage(img['caminho'], 100, y_position - 100, width=100, height=100)
+            c.drawImage('uploads/'+img['caminho'], 100, y_position - 105, width=100, height=100)
             y_position -= 140  # Espaçamento entre as imagens
         except Exception as e:
             c.drawString(100, y_position - 20, f"Erro ao carregar imagem: {e}")
             y_position -= 40  # Ajuste se ocorrer erro
-    """
 
-    # Finalizando o PDF
+    # Salvando o PDF
     c.save()
-
-    #return send_file(f'{cadastro_nome}.pdf', as_attachment=True, download_name=f"Cadastro_{cadastroo['nome']}.pdf", mimetype="application/pdf")
-    return redirect('/')
+    return send_file(f'{cadastro_nome}.pdf', as_attachment=True, download_name=f"Cadastro_{cadastroo['nome']}.pdf", mimetype="application/pdf")
 
 # Iniciar o servidor Flask
 if __name__ == '__main__':
