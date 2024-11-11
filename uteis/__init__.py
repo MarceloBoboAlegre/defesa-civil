@@ -25,23 +25,34 @@ def cadastro(nome, email, latitude, longitude, formato, imagens):
     db = conectar_bd()
     myc = cursor_on(db)
 
-    sql = ('INSERT INTO cadastros (NOME, EMAIL, LATITUDE, LONGITUDE, FORMATO) VALUES (%s, %s, %s, %s, %s)')
-    val = (nome, email, latitude, longitude, formato)
-    try:
-        myc.execute(sql, val)
-    except:
-        print('Erro')
+    # Confere se nome já foi cadastrado
+    sql = "SELECT * FROM cadastros WHERE nome = %s"
+    val = (nome.capitalize(), )
+    myc.execute(sql, val)
+    confere = myc.fetchone()
+    if confere != None:
+        turnoff(myc, db)
+        return False
     else:
-        db.commit()
-        cadastro_id = myc.lastrowid
-    # Processar cada imagem
-    for imagem in imagens:
-            if imagem.filename == '':
-                continue
-            sql_imagem = "INSERT INTO imagens (cadastro_id, caminho) VALUES (%s, %s)"
-            myc.execute(sql_imagem, (cadastro_id, imagem.filename))
+        # Inserindo informações no Banco de dados
+        sql = ('INSERT INTO cadastros (NOME, EMAIL, LATITUDE, LONGITUDE, FORMATO) VALUES (%s, %s, %s, %s, %s)')
+        val = (nome.capitalize(), email, latitude, longitude, formato)
+        try:
+            myc.execute(sql, val)
+        except:
+            print('Erro ao cadastrar')
+        else:
             db.commit()
-    turnoff(myc, db)
+            cadastro_id = myc.lastrowid
+
+        # Processar cada imagem
+        for imagem in imagens:
+                if imagem.filename == '':
+                    continue
+                sql_imagem = "INSERT INTO imagens (cadastro_id, caminho) VALUES (%s, %s)"
+                myc.execute(sql_imagem, (cadastro_id, imagem.filename))
+                db.commit()
+        turnoff(myc, db)
 
 
 def get_markers():

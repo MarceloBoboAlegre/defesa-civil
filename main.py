@@ -37,7 +37,10 @@ def cadastrar():
     imagens = request.files.getlist('imagens')
     for i in imagens:
         i.save(os.path.join(app.config['UPLOAD_FOLDER'], i.filename))
-    cadastro(nome, email, latitude, longitude, formato, imagens)
+    try:
+        cadastro(nome, email, latitude, longitude, formato, imagens)
+    except:
+        print('Erro ao cadastrar')
 
 
 # Rota para gerar o PDF
