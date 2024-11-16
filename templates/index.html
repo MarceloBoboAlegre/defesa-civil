@@ -20,12 +20,18 @@
         </div>
         <div class="offcanvas-body">
             <form id="formCadastro" action="/cadastrar" method="post">
+
+                <!-- Subdivisão Dados do Chamado -->
                 <div class="mb-3">
                     <h5 id="DadosDoChamado">Dados do Chamado</h5>
+
+                    <!-- Campo Data do Chamado -->
                     <div class="mb-3">
                         <label for="data" class="form-label">Data:</label>
                         <input type="date" class="form-control" id="data" name="data" required>
                     </div>
+
+                    <!-- Campo Origem do Chamado -->
                     <div class="mb-3">
                         <label for="origem" class="form-label">Origem do chamado:</label>
                             <select class="form-select" id="origem" name="origem">
@@ -40,77 +46,105 @@
                             </select>
                     </div>
                 </div>
+
+                <!-- Subdivisão Dados do Solicitante -->
                 <div class="mb-3">
                     <h5 id="DadosDoChamado">Dados do Solicitante</h5>
+
+                    <!-- Campo Nome -->
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome:</label>
                         <input type="text" class="form-control" id="nome" name="nome" required>
                     </div>
+
+                    <!-- Campo CPF/CNPJ -->
                     <div class="mb-3">
                         <label for="documento" class="form-label">CPF/CNPJ:</label>
                         <input type="text" class="form-control" id="documento" name="documento" required>
                     </div>
+
+                    <!-- Campo Telefone 1 -->
                     <div class="mb-3">
                         <label for="telefone1" class="form-label">Telefone 1:</label>
                         <input type="tel" class="form-control" id="telefone1" name="telefone1">
                     </div>
+
+                    <!-- Campo Telefone 2 -->
                     <div class="mb-3">
                         <label for="telefone2" class="form-label">Telefone 2:</label>
                         <input type="tel" class="form-control" id="telefone2" name="telefone2">
                     </div>
+
+                    <!-- Campo Email -->
                     <div class="mb-3">
                         <label for="email" class="form-label">Email:</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                 </div>
+
+                <!-- Subdivisão Dados da Ocorrência -->
                 <div class="mb-3">
                     <h5 id="DadosDoChamado">Dados da Ocorrência</h5>
+
+                    <!-- Campo Logradouro -->
                     <div class="mb-3">
                         <label for="logradouro" class="form-label">Logradouro</label>
                         <input type="text" class="form-control" id="logradouro" name="logradouro" required>
                     </div>
+
+                    <!-- Campo Número da Residência -->
                     <div class="mb-3">
                         <label for="numero" class="form-label">Número</label>
                         <input type="text" class="form-control" id="numero" name="numero" required>
                     </div>
+
+                    <!-- Campo Bairro -->
                     <div class="mb-3">
                         <label for="bairro" class="form-label">Bairro</label>
                         <input type="text" class="form-control" id="bairro" name="bairro" required>
                     </div>
+
+                    <!-- Campo Complemento -->
                     <div class="mb-3">
                         <label for="complemento" class="form-label">Complemento</label>
                         <input type="text" class="form-control" id="complemento" name="complemento">
                     </div>
+
+                    <!-- Campo Ponto de Referência -->
                     <div class="mb-3">
                         <label for="ponto_referencia" class="form-label">Ponto de Referência</label>
                         <input type="text" class="form-control" id="ponto_referencia" name="ponto_referencia">
                     </div>
+
+                    <!-- Campo Latitude -->
                     <div class="mb-3">
                         <label for="latitude" class="form-label">Latitude:</label>
                         <input type="text" class="form-control" id="latitude" name="latitude" readonly>
                     </div>
+
+                    <!-- Campo Longitude -->
                     <div class="mb-3">
                         <label for="longitude" class="form-label">Longitude:</label>
                         <input type="text" class="form-control" id="longitude" name="longitude" readonly>
                     </div>
+
+                    <!-- Campo Ocorrência -->
                     <div class="mb-3">
                         <label for="ocorrencia" class="form-label">Ocorrência</label>
                         <textarea class="form-control" id="ocorrencia" name="ocorrencia" rows="4" required></textarea>
                     </div>
+
+                    <!-- Campo Prioridade -->
                     <div class="mb-3">
                         <label for="formato" class="form-label">Formato:</label>
                             <select class="form-select" id="formato" name="formato">
-                                <option value="greenCircle">greenCircle</option>
-                                <option value="greenSquare">greenSquare</option>
-                                <option value="greenTriangle">greenTriangle</option>
-                                <option value="yellowCircle">yellowCircle</option>
-                                <option value="yellowSquare">yellowSquare</option>
-                                <option value="yellowTriangle">yellowTriangle</option>
-                                <option value="redCircle">redCircle</option>
-                                <option value="redSquare">redSquare</option>
-                                <option value="redTriangle">redTriangle</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Média">Média</option>
+                                <option value="Baixa">Baixa</option>
                             </select>
                     </div>
+
+                    <!-- Campo Área -->
                     <div class="mb-3">
                         <label for="area" class="form-label">Área:</label>
                             <select class="form-select" id="area" name="area">
@@ -118,15 +152,21 @@
                                 <option value="Pública">Pública</option>
                             </select>
                     </div>
+
+                    <!-- Campo PMRR -->
                     <div class="mb-3">
                         <label for="PMRR" class="form-label">PMRR</label>
                         <input type="text" class="form-control" id="PMRR" name="PMRR">
                     </div>
+
+                    <!-- Campo Imagens -->
                     <div class="mb-3">
                         <label for="imagens" class="form-label">Imagens</label>
                         <input type="file" class="form-control" id="imagens" name="imagens" multiple accept="image/*">
                     </div>
                 </div>
+
+                <!-- Botão Cadastrar -->
                 <button type="submit" value="Cadastrar" class="btn btn-primary">Cadastrar</button>
             </form>
         </div>
