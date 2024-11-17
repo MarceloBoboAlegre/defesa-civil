@@ -29,16 +29,32 @@ def home():
 @app.route('/cadastrar', methods=['POST'])
 def cadastrar():
     # Pegar os dados enviados pelo formulário
+    data = request.form.get('data')
+    origem = request.form.get('origem')
     nome = request.form.get('nome')
+    documento = request.form.get('documento')
+    telefone1 = request.form.get('telefone1')
+    telefone2 = request.form.get('telefone2')
     email = request.form.get('email')
+    logradouro = request.form.get('logradouro')
+    numero = request.form.get('numero')
+    bairro = request.form.get('bairro')
+    complemento = request.form.get('complemento')
+    ponto_referencia = request.form.get('ponto_referencia')
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')
-    formato =  request.form.get('formato')
+    ocorrencia = request.form.get('ocorrencia')
+    prioridade =  request.form.get('prioridade')
+    area = request.form.get('area')
+    pmrr = request.form.get('pmrr')
     imagens = request.files.getlist('imagens')
     for i in imagens:
         i.save(os.path.join(app.config['UPLOAD_FOLDER'], i.filename))
     try:
-        cadastro(nome, email, latitude, longitude, formato, imagens)
+        print(data, origem, nome, documento, telefone1, telefone2, email, 
+              logradouro, numero, bairro, complemento, ponto_referencia, 
+              latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens)
+        #cadastro(nome, email, latitude, longitude, formato, imagens)
     except:
         print('Erro ao cadastrar')
 

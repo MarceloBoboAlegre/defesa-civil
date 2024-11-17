@@ -136,8 +136,8 @@
 
                     <!-- Campo Prioridade -->
                     <div class="mb-3">
-                        <label for="formato" class="form-label">Formato:</label>
-                            <select class="form-select" id="formato" name="formato">
+                        <label for="prioridade" class="form-label">Prioridade:</label>
+                            <select class="form-select" id="prioridade" name="prioridade">
                                 <option value="Alta">Alta</option>
                                 <option value="Média">Média</option>
                                 <option value="Baixa">Baixa</option>
@@ -155,8 +155,8 @@
 
                     <!-- Campo PMRR -->
                     <div class="mb-3">
-                        <label for="PMRR" class="form-label">PMRR</label>
-                        <input type="text" class="form-control" id="PMRR" name="PMRR">
+                        <label for="pmrr" class="form-label">PMRR</label>
+                        <input type="text" class="form-control" id="pmrr" name="pmrr">
                     </div>
 
                     <!-- Campo Imagens -->
@@ -309,17 +309,30 @@
             position: 'topright' // Posiciona os controles de zoom no canto superior direito
         }).addTo(map);
 
-        // Função para enviar os dados do formulário e adicionar o marker
+        // Função para enviar os dados do formulário
         document.getElementById('formCadastro').addEventListener('submit', function(event) {
             event.preventDefault(); // Previne o recarregamento da página
 
             const formData = new FormData();
     
+            formData.append('data', document.getElementById('data').value);
+            formData.append('origem', document.getElementById('origem').value);
             formData.append('nome', document.getElementById('nome').value);
+            formData.append('documento', document.getElementById('documento').value);
+            formData.append('telefone1', document.getElementById('telefone1').value);
+            formData.append('telefone2', document.getElementById('telefone2').value);
             formData.append('email', document.getElementById('email').value);
+            formData.append('logradouro', document.getElementById('logradouro').value);
+            formData.append('numero', document.getElementById('numero').value);
+            formData.append('bairro', document.getElementById('bairro').value);
+            formData.append('complemento', document.getElementById('complemento').value);
+            formData.append('ponto_referencia', document.getElementById('ponto_referencia').value);
             formData.append('latitude', document.getElementById('latitude').value);
             formData.append('longitude', document.getElementById('longitude').value);
-            formData.append('formato', document.getElementById('formato').value);
+            formData.append('ocorrencia', document.getElementById('ocorrencia').value);
+            formData.append('prioridade', document.getElementById('prioridade').value);
+            formData.append('area', document.getElementById('area').value);
+            formData.append('pmrr', document.getElementById('pmrr').value);
 
             const imagens = document.getElementById('imagens').files;
             for (let i = 0; i < imagens.length; i++) {

@@ -86,3 +86,45 @@ def gerador_pdf(nome):
     turnoff(myc, db)
     info = [cadastro, imagens]
     return info
+
+
+def new_cadastro(data, origem, nome, documento, telefone1, telefone2, email, 
+              logradouro, numero, bairro, complemento, ponto_referencia, 
+              latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens):
+    db = conectar_bd()
+    myc = cursor_on(db)
+
+    infos = [data, origem, nome, documento, telefone1, telefone2, email, 
+            logradouro, numero, bairro, complemento, ponto_referencia, 
+            latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens]
+    
+    # Confere se nome já foi cadastrado
+    """
+    sql = "SELECT * FROM cadastros WHERE nome = %s"
+    val = (nome.capitalize(), )
+    myc.execute(sql, val)
+    confere = myc.fetchone()
+    if confere != None:
+        turnoff(myc, db)
+        return False
+    else:
+        # Inserindo informações no Banco de dados
+        sql = ('INSERT INTO chamados (NOME, EMAIL, LATITUDE, LONGITUDE, FORMATO) VALUES (%s, %s, %s, %s, %s)')
+        val = (nome.capitalize(), email, latitude, longitude, prioridade)
+        try:
+            myc.execute(sql, val)
+        except:
+            print('Erro ao cadastrar')
+        else:
+            db.commit()
+            cadastro_id = myc.lastrowid
+
+        # Processar cada imagem
+        for imagem in imagens:
+                if imagem.filename == '':
+                    continue
+                sql_imagem = "INSERT INTO imagens (cadastro_id, caminho) VALUES (%s, %s)"
+                myc.execute(sql_imagem, (cadastro_id, imagem.filename))
+                db.commit()
+        turnoff(myc, db)
+        """
