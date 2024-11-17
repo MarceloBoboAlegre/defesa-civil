@@ -94,13 +94,13 @@ def new_cadastro(data, origem, nome, documento, telefone1, telefone2, email,
     db = conectar_bd()
     myc = cursor_on(db)
 
-    infos = [data, origem, nome, documento, telefone1, telefone2, email, 
+    infos = (data, origem, nome.capitalize(), documento, telefone1, telefone2, email, 
             logradouro, numero, bairro, complemento, ponto_referencia, 
-            latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens]
+            latitude, longitude, ocorrencia, prioridade, area, pmrr.upper(), imagens)
+    print(infos)
     
     # Confere se nome já foi cadastrado
-    """
-    sql = "SELECT * FROM cadastros WHERE nome = %s"
+    sql = "SELECT * FROM chamados WHERE nome = %s"
     val = (nome.capitalize(), )
     myc.execute(sql, val)
     confere = myc.fetchone()
@@ -109,16 +109,21 @@ def new_cadastro(data, origem, nome, documento, telefone1, telefone2, email,
         return False
     else:
         # Inserindo informações no Banco de dados
-        sql = ('INSERT INTO chamados (NOME, EMAIL, LATITUDE, LONGITUDE, FORMATO) VALUES (%s, %s, %s, %s, %s)')
-        val = (nome.capitalize(), email, latitude, longitude, prioridade)
+        sql = ('INSERT INTO chamados (data_chamado, origem_chamado, nome, documento, telefone1, telefone2, email, logradouro, numero, bairro, complemento, ponto_referencia, latitude, longitude, ocorrencia, prioridade, area, pmrr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)')
+        val = (data, origem, nome.capitalize(), documento, telefone1, telefone2, email, 
+            logradouro, numero, bairro, complemento, ponto_referencia, 
+            latitude, longitude, ocorrencia, prioridade, area, pmrr.upper())
         try:
             myc.execute(sql, val)
-        except:
-            print('Erro ao cadastrar')
+        except Exception as erro:
+            print(erro.__class__, erro)
+            turnoff(myc, db)
         else:
             db.commit()
             cadastro_id = myc.lastrowid
+            turnoff(myc, db)
 
+        """
         # Processar cada imagem
         for imagem in imagens:
                 if imagem.filename == '':

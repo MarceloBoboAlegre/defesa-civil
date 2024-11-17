@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, send_file, redirect
-from uteis import cadastro, get_markers, gerador_pdf
+from uteis import cadastro, get_markers, gerador_pdf, new_cadastro
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -51,7 +51,7 @@ def cadastrar():
     for i in imagens:
         i.save(os.path.join(app.config['UPLOAD_FOLDER'], i.filename))
     try:
-        print(data, origem, nome, documento, telefone1, telefone2, email, 
+        new_cadastro(data, origem, nome, documento, telefone1, telefone2, email, 
               logradouro, numero, bairro, complemento, ponto_referencia, 
               latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens)
         #cadastro(nome, email, latitude, longitude, formato, imagens)
