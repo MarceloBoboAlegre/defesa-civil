@@ -122,7 +122,6 @@ def new_cadastro(data, origem, nome, documento, telefone1, telefone2, email,
             db.commit()
             cadastro_id = myc.lastrowid
             print(cadastro_id)
-            turnoff(myc, db)
 
         # Processar cada imagem
         for imagem in imagens:
