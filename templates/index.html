@@ -420,8 +420,7 @@
             var forma = {{ marcador[1][m][4] }}; //Formato do ícone trazido do banco de dados
             var marker = L.marker([lat, lng], {icon: forma}).addTo(map);
             marker.bindPopup("<h5 id='PDFid' class='h6' value='{{ marcador[1][m][0] }}'>ID: {{ marcador[1][m][0] }}</h5>"+
-            "<h5 class='h6'>Data: {{ marcador[1][m][1] }}</h5>"+
-            "<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
+            "<h5 class='h6'>Data: {{ marcador[1][m][1] }}</h5>").openPopup();
         </script>
     {% endfor %}
 </body>

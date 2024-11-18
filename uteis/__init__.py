@@ -43,7 +43,6 @@ def gerador_pdf(id):
     val = (id, )
     myc.execute(sql, val)
     cadastro = myc.fetchone()
-    print(cadastro)
     id_cad = cadastro['id_chamado']
 
     sql = "SELECT caminho FROM imagens WHERE cadastro_id = %s"
@@ -64,37 +63,25 @@ def cadastro(data, origem, nome, documento, telefone1, telefone2, email,
     infos = (data, origem, nome.capitalize(), documento, telefone1, telefone2, email, 
             logradouro, numero, bairro, complemento, ponto_referencia, 
             latitude, longitude, ocorrencia, prioridade, area, pmrr.upper(), imagens)
-    print(infos)
     
-    # Confere se nome já foi cadastrado
-    sql = "SELECT * FROM chamados WHERE nome = %s"
-    val = (nome.capitalize(), )
-    myc.execute(sql, val)
-    confere = myc.fetchone()
-    if confere != None:
+    # Inserindo informações no Banco de dados
+    sql = ('INSERT INTO chamados (data_chamado, origem_chamado, nome, documento, telefone1, telefone2, email, logradouro, numero, bairro, complemento, ponto_referencia, latitude, longitude, ocorrencia, prioridade, area, pmrr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)')
+    val = (data, origem, nome.capitalize(), documento, telefone1, telefone2, email, 
+        logradouro, numero, bairro, complemento, ponto_referencia, 
+        latitude, longitude, ocorrencia, prioridade, area, pmrr.upper())
+    try:
+        myc.execute(sql, val)
+    except Exception:
         turnoff(myc, db)
-        return False
     else:
-        # Inserindo informações no Banco de dados
-        sql = ('INSERT INTO chamados (data_chamado, origem_chamado, nome, documento, telefone1, telefone2, email, logradouro, numero, bairro, complemento, ponto_referencia, latitude, longitude, ocorrencia, prioridade, area, pmrr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)')
-        val = (data, origem, nome.capitalize(), documento, telefone1, telefone2, email, 
-            logradouro, numero, bairro, complemento, ponto_referencia, 
-            latitude, longitude, ocorrencia, prioridade, area, pmrr.upper())
-        try:
-            myc.execute(sql, val)
-        except Exception as erro:
-            print(erro.__class__, erro)
-            turnoff(myc, db)
-        else:
-            db.commit()
-            cadastro_id = myc.lastrowid
-            print(cadastro_id)
+        db.commit()
+        cadastro_id = myc.lastrowid
 
-        # Processar cada imagem
-        for imagem in imagens:
-                if imagem.filename == '':
-                    continue
-                sql_imagem = "INSERT INTO imagens (cadastro_id, caminho) VALUES (%s, %s)"
-                myc.execute(sql_imagem, (cadastro_id, imagem.filename))
-                db.commit()
-        turnoff(myc, db)
+    # Processar cada imagem
+    for imagem in imagens:
+            if imagem.filename == '':
+                continue
+            sql_imagem = "INSERT INTO imagens (cadastro_id, caminho) VALUES (%s, %s)"
+            myc.execute(sql_imagem, (cadastro_id, imagem.filename))
+            db.commit()
+    turnoff(myc, db)
