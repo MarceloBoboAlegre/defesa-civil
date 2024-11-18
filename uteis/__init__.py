@@ -35,14 +35,15 @@ def get_markers():
     return lista
 
 
-def gerador_pdf(nome):
+def gerador_pdf(id):
     db = conectar_bd()
     myc = db.cursor(dictionary=True)
 
-    sql = "SELECT * FROM chamados WHERE nome = %s"
-    val = (nome, )
+    sql = "SELECT * FROM chamados WHERE id_chamado = %s"
+    val = (id, )
     myc.execute(sql, val)
     cadastro = myc.fetchone()
+    print(cadastro)
     id_cad = cadastro['id_chamado']
 
     sql = "SELECT caminho FROM imagens WHERE cadastro_id = %s"

@@ -20,10 +20,19 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Rota padrão
 @app.route('/')
 def home():
-    marca = get_markers()
+    temp = get_markers()
+
+    # Transformando as tuplas em listas para poder transformar a data em string
+    marca = []
+    temp2 = []
+    for t in temp:
+        for i in t:
+            temp2.append(i)
+        temp2[1] = temp2[1].strftime('%d/%m/%Y')
+        marca.append(temp2[:])
+        temp2.clear()
     quant = len(marca)
     final = [quant, marca]
-    print(final)
     return render_template('index.html', marcador=final)
 
 # Rota para receber os dados do formulário e cadastrar no banco de dados
@@ -62,13 +71,12 @@ def cadastrar():
 # Rota para gerar o PDF
 @app.route('/gerar_pdf', methods=['GET'])
 def gerar_pdf():
-    cadastro_nome = request.args.get('nome')
-    info = gerador_pdf(cadastro_nome.capitalize())
-    print(info)
+    cadastro_id = request.args.get('id')
+    info = gerador_pdf(cadastro_id)
 
     cadastroo = info[0]
     imagens = info[1]
-    cadastro_id = cadastroo['id_chamado']
+    cadastro_nome = cadastroo['nome']
     
 
     # Criando o PDF com reportlab
@@ -79,15 +87,13 @@ def gerar_pdf():
     c.drawString(100, height - 50, "Relatório do Cadastro")
     altura = 50
     for k, v in cadastroo.items():
-        print(k, v)
         altura += 20
         c.drawString(100, height - altura, f"{k}: {v}")
     
 
     # Adicionando imagens ao PDF
-    y_position = height - 210
+    y_position = height - (altura + 20)
     for i, img in enumerate(imagens):
-        print(img['caminho'])
         c.drawString(100, y_position, f"Imagem {i + 1}")
         try:
             c.drawImage('uploads/'+img['caminho'], 100, y_position - 105, width=100, height=100)

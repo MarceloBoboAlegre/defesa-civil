@@ -180,10 +180,10 @@
         </div>
         <div class="offcanvas-body">
             <div class="mb-3">
-                <label for="searchNome" class="form-label">Nome do Cadastro</label>
-                <input type="text" class="form-control" id="searchNome" placeholder="Digite o Nome do cadastro">
+                <label for="searchID" class="form-label">ID do Cadastro</label>
+                <input type="text" class="form-control" id="searchID" placeholder="Digite o Nome do cadastro">
             </div>
-            <button class="btn btn-primary" onclick="buscarCadastroPDF()">Buscar</button>  
+            <button class="btn btn-primary" onclick="buscarCadastroPDF()">Buscar</button>
         </div>
     </div>
 
@@ -360,9 +360,9 @@
         });
 
         function buscarCadastroPDF() {
-            const searchNome = document.getElementById("searchNome").value;
+            const searchID = document.getElementById("searchID").value;
 
-            fetch(`http://localhost:5000/gerar_pdf?nome=${searchNome}`)
+            fetch(`http://localhost:5000/gerar_pdf?id=${searchID}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Erro ao gerar o PDF");
                     return response.blob();
@@ -372,7 +372,7 @@
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement("a");
                     link.href = url;
-                    link.download = `Cadastro_${searchNome}.pdf`;
+                    link.download = `Cadastro_${searchID}.pdf`;
                     link.click();
                     URL.revokeObjectURL(url); // Libera o URL temporário
                 })
@@ -419,7 +419,9 @@
             var lng = '{{ marcador[1][m][3]|tojson }}'; //Variável longitude trazida do banco de dados
             var forma = {{ marcador[1][m][4] }}; //Formato do ícone trazido do banco de dados
             var marker = L.marker([lat, lng], {icon: forma}).addTo(map);
-            marker.bindPopup("<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
+            marker.bindPopup("<h5 id='PDFid' class='h6' value='{{ marcador[1][m][0] }}'>ID: {{ marcador[1][m][0] }}</h5>"+
+            "<h5 class='h6'>Data: {{ marcador[1][m][1] }}</h5>"+
+            "<buttton id='btnGerarPDF' class='btn btn-primary'>Gerar Relatório</button>").openPopup();
         </script>
     {% endfor %}
 </body>
