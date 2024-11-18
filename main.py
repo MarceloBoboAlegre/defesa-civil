@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, send_file, redirect
-from uteis import cadastro, get_markers, gerador_pdf, new_cadastro
+from uteis import cadastro, get_markers, gerador_pdf
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -23,6 +23,7 @@ def home():
     marca = get_markers()
     quant = len(marca)
     final = [quant, marca]
+    print(final)
     return render_template('index.html', marcador=final)
 
 # Rota para receber os dados do formulário e cadastrar no banco de dados
@@ -51,10 +52,9 @@ def cadastrar():
     for i in imagens:
         i.save(os.path.join(app.config['UPLOAD_FOLDER'], i.filename))
     try:
-        new_cadastro(data, origem, nome, documento, telefone1, telefone2, email, 
-              logradouro, numero, bairro, complemento, ponto_referencia, 
-              latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens)
-        #cadastro(nome, email, latitude, longitude, formato, imagens)
+        cadastro(data, origem, nome, documento, telefone1, telefone2, email, 
+            logradouro, numero, bairro, complemento, ponto_referencia, 
+            latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens)
     except:
         print('Erro ao cadastrar')
 
@@ -63,11 +63,12 @@ def cadastrar():
 @app.route('/gerar_pdf', methods=['GET'])
 def gerar_pdf():
     cadastro_nome = request.args.get('nome')
-    info = gerador_pdf(cadastro_nome)
+    info = gerador_pdf(cadastro_nome.capitalize())
     print(info)
+
     cadastroo = info[0]
     imagens = info[1]
-    cadastro_id = cadastroo['id']
+    cadastro_id = cadastroo['id_chamado']
     
 
     # Criando o PDF com reportlab
@@ -76,12 +77,12 @@ def gerar_pdf():
 
     # Título do PDF
     c.drawString(100, height - 50, "Relatório do Cadastro")
-    c.drawString(100, height - 70, f"ID: {cadastroo['id']}")
-    c.drawString(100, height - 90, f"Nome: {cadastroo['nome']}")
-    c.drawString(100, height - 110, f"Email: {cadastroo['email']}")
-    c.drawString(100, height - 130, f"Latitude: {cadastroo['latitude']}")
-    c.drawString(100, height - 150, f"Longitude: {cadastroo['longitude']}")
-    c.drawString(100, height - 170, f"Forma: {cadastroo['formato']}")
+    altura = 50
+    for k, v in cadastroo.items():
+        print(k, v)
+        altura += 20
+        c.drawString(100, height - altura, f"{k}: {v}")
+    
 
     # Adicionando imagens ao PDF
     y_position = height - 210
@@ -98,6 +99,7 @@ def gerar_pdf():
     # Salvando o PDF
     c.save()
     return send_file(f'{cadastro_nome}.pdf', as_attachment=True, download_name=f"Cadastro_{cadastroo['nome']}.pdf", mimetype="application/pdf")
+
 
 # Iniciar o servidor Flask
 if __name__ == '__main__':
