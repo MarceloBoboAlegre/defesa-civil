@@ -121,9 +121,9 @@ def new_cadastro(data, origem, nome, documento, telefone1, telefone2, email,
         else:
             db.commit()
             cadastro_id = myc.lastrowid
+            print(cadastro_id)
             turnoff(myc, db)
 
-        """
         # Processar cada imagem
         for imagem in imagens:
                 if imagem.filename == '':
@@ -132,4 +132,3 @@ def new_cadastro(data, origem, nome, documento, telefone1, telefone2, email,
                 myc.execute(sql_imagem, (cadastro_id, imagem.filename))
                 db.commit()
         turnoff(myc, db)
-        """
