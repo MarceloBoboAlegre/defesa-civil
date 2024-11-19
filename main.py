@@ -3,6 +3,7 @@ from uteis import cadastro, get_markers, gerador_pdf
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import simpleSplit
 import os
 
 
@@ -87,8 +88,16 @@ def gerar_pdf():
     c.drawString(100, height - 50, "Relatório do Cadastro")
     altura = 50
     for k, v in cadastroo.items():
-        altura += 20
-        c.drawString(100, height - altura, f"{k}: {v}")
+        if k == 'ocorrencia':
+            altura += 20
+            lines = simpleSplit(v, 'Helvetica', 12, width - 120)
+            c.drawString(100, height - altura, f"{k}:")
+            for line in lines:
+                altura += 20
+                c.drawString(100, height - altura, f"{line}")
+        else:
+            altura += 20
+            c.drawString(100, height - altura, f"{k}: {v}")
     
 
     # Adicionando imagens ao PDF
@@ -97,7 +106,7 @@ def gerar_pdf():
         c.drawString(100, y_position, f"Imagem {i + 1}")
         try:
             c.drawImage('uploads/'+img['caminho'], 100, y_position - 105, width=100, height=100)
-            y_position -= 140  # Espaçamento entre as imagens
+            y_position -= 120  # Espaçamento entre as imagens
         except Exception as e:
             c.drawString(100, y_position - 20, f"Erro ao carregar imagem: {e}")
             y_position -= 40  # Ajuste se ocorrer erro

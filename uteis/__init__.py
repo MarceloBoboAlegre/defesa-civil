@@ -59,10 +59,6 @@ def cadastro(data, origem, nome, documento, telefone1, telefone2, email,
             latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens):
     db = conectar_bd()
     myc = cursor_on(db)
-
-    infos = (data, origem, nome.capitalize(), documento, telefone1, telefone2, email, 
-            logradouro, numero, bairro, complemento, ponto_referencia, 
-            latitude, longitude, ocorrencia, prioridade, area, pmrr.upper(), imagens)
     
     # Inserindo informações no Banco de dados
     sql = ('INSERT INTO chamados (data_chamado, origem_chamado, nome, documento, telefone1, telefone2, email, logradouro, numero, bairro, complemento, ponto_referencia, latitude, longitude, ocorrencia, prioridade, area, pmrr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)')
