@@ -3,10 +3,10 @@ import mysql.connector
 
 def conectar_bd():
     database = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='',
-        database='defesa'
+        host='marcelodnrjunior.mysql.pythonanywhere-services.com',
+        user='marcelodnrjunior',
+        password='FatecDefesa2024',
+        database='marcelodnrjunior$defesa'
     )
     return database
 
