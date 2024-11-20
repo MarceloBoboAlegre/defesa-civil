@@ -59,9 +59,6 @@ def cadastrar():
     area = request.form.get('area')
     pmrr = request.form.get('pmrr')
     imagens = request.files.getlist('imagens')
-    print(data, origem, nome, documento, telefone1, telefone2, email, 
-        logradouro, numero, bairro, complemento, ponto_referencia, 
-        latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens)
     for i in imagens:
         i.save(os.path.join(app.config['UPLOAD_FOLDER'], i.filename))
     try:
