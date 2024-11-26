@@ -339,7 +339,7 @@
                 formData.append('imagens', imagens[i]);
             }
 
-            fetch('https://defesa-civil-00ed66d5f82a.herokuapp.com', {
+            fetch('https://defesa-civil-00ed66d5f82a.herokuapp.com/cadastrar', {
                 method: 'POST',
                 body: formData
             })
