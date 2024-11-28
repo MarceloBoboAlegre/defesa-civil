@@ -181,22 +181,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Offcanvas de busca -->
-    <div class="offcanvas offcanvas-top h-75 shadow-sm" tabindex="-1" id="offcanvasSearch" aria-labelledby="offcanvasSearchLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasSearchLabel">Formulário de Cadastro</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="mb-3">
-                <label for="searchID" class="form-label">ID do Cadastro</label>
-                <input type="text" class="form-control" id="searchID" placeholder="Digite o Nome do cadastro">
-            </div>
-            <button class="btn btn-primary" onclick="buscarCadastroPDF()">Buscar</button>
-        </div>
-    </div>
-
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -292,21 +276,6 @@
                         currentLayer = 'osm';
                     }
                 };
-
-                // Criando o botão para buscar
-                var btnSearch = L.DomUtil.create('button', 'btn btn-primary mb-2', container);
-                btnSearch.innerHTML = 'Buscar Cadastro';
-                btnSearch.style.padding = '10px';
-
-                // Função para abrir o offcanvas quando o botão for clicado
-                btnSearch.onclick = function(e) {
-                    L.DomEvent.stopPropagation(e); // Evita que o evento de clique se propague para o mapa
-
-                    // Abrindo o offcanvas
-                    var buscaOffcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasSearch'));
-                    buscaOffcanvas.show();
-                };
-
                 return container;
             }
         });
@@ -370,8 +339,8 @@
             }, 500);
         });
 
-        function buscarCadastroPDF() {
-            const searchID = document.getElementById("searchID").value;
+        function buscarCadastroPDF(id_busca) {
+            const searchID = id_busca;
 
             fetch(`https://defesa-civil-00ed66d5f82a.herokuapp.com/gerar_pdf?id=${searchID}`)
                 .then(response => {
@@ -478,8 +447,9 @@
             var lng = '{{ marcador[1][m][3]|tojson }}'; //Variável longitude trazida do banco de dados
             var forma = {{ marcador[1][m][4] }}; //Formato do ícone trazido do banco de dados
             var marker = L.marker([lat, lng], {icon: forma}).addTo(map);
-            marker.bindPopup("<h5 id='PDFid' class='h6' value='{{ marcador[1][m][0] }}'>ID: {{ marcador[1][m][0] }}</h5>"+
-            "<h5 class='h6'>Data: {{ marcador[1][m][1] }}</h5>").openPopup();
+            marker.bindPopup("<h5 id='PDFid' class='h6'>ID: {{ marcador[1][m][0] }}</h5>"+
+            "<h5 class='h6'>Data: {{ marcador[1][m][1] }}</h5>"+
+            "<button class='btn btn-primary' onclick='buscarCadastroPDF({{ marcador[1][m][0] }})'>Gerar PDF</button>").openPopup();
         </script>
     {% endfor %}
 </body>
