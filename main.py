@@ -32,6 +32,28 @@ def home():
         temp2[1] = temp2[1].strftime('%d/%m/%Y')
         marca.append(temp2[:])
         temp2.clear()
+    for m in marca:
+        if m[5] == 'Risco estrutural e geologia':
+            if m[4] == 'Concluído':
+                m[4] = 'greenSquare'
+            elif m[4] == 'Visitado':
+                m[4] = 'yellowSquare'
+            else:
+                m[4] = 'redSquare'
+        elif m[5] == 'Queda de árvore':
+            if m[4] == 'Concluído':
+                m[4] = 'greenTriangle'
+            elif m[4] == 'Visitado':
+                m[4] = 'yellowTriangle'
+            else:
+                m[4] = 'redTriangle'
+        else:
+            if m[4] == 'Concluído':
+                m[4] = 'greenCircle'
+            elif m[4] == 'Visitado':
+                m[4] = 'yellowCircle'
+            else:
+                m[4] = 'redCircle'
     quant = len(marca)
     final = [quant, marca]
     return render_template('index.html', marcador=final)
@@ -55,7 +77,8 @@ def cadastrar():
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')
     ocorrencia = request.form.get('ocorrencia')
-    prioridade =  request.form.get('prioridade')
+    tipo_ocorrencia = request.form.get('tipo_ocorrencia')
+    situacao = request.form.get('situacao')
     area = request.form.get('area')
     pmrr = request.form.get('pmrr')
     imagens = request.files.getlist('imagens')
@@ -64,7 +87,7 @@ def cadastrar():
     try:
         cadastro(data, origem, nome, documento, telefone1, telefone2, email, 
             logradouro, numero, bairro, complemento, ponto_referencia, 
-            latitude, longitude, ocorrencia, prioridade, area, pmrr, imagens)
+            latitude, longitude, ocorrencia, tipo_ocorrencia, situacao, area, pmrr, imagens)
     except:
         print('Erro ao cadastrar')
 

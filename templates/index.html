@@ -134,13 +134,23 @@
                         <textarea class="form-control" id="ocorrencia" name="ocorrencia" rows="4" required></textarea>
                     </div>
 
-                    <!-- Campo Prioridade -->
+                    <!-- Campo Tipo_Ocorrência -->
                     <div class="mb-3">
-                        <label for="prioridade" class="form-label">Prioridade:</label>
-                            <select class="form-select" id="prioridade" name="prioridade">
-                                <option value="Alta">Alta</option>
-                                <option value="Média">Média</option>
-                                <option value="Baixa">Baixa</option>
+                        <label for="tipo_ocorrencia" class="form-label">Tipo de Ocorrência:</label>
+                            <select class="form-select" id="tipo_ocorrencia" name="tipo_ocorrencia">
+                                <option value="Risco estrutural e geologia">Risco estrutural e geologia</option>
+                                <option value="Queda de árvore">Queda de árvore</option>
+                                <option value="Operacional">Operacional</option>
+                            </select>
+                    </div>
+
+                    <!-- Campo Situação -->
+                    <div class="mb-3">
+                        <label for="situacao" class="form-label">Situação:</label>
+                            <select class="form-select" id="situacao" name="situacao">
+                                <option value="Aberto">Aberto</option>
+                                <option value="Visitado">Visitado</option>
+                                <option value="Concluído">Concluído</option>
                             </select>
                     </div>
 
@@ -330,7 +340,8 @@
             formData.append('latitude', document.getElementById('latitude').value);
             formData.append('longitude', document.getElementById('longitude').value);
             formData.append('ocorrencia', document.getElementById('ocorrencia').value);
-            formData.append('prioridade', document.getElementById('prioridade').value);
+            formData.append('tipo_ocorrencia', document.getElementById('tipo_ocorrencia').value);
+            formData.append('situacao', document.getElementById('situacao').value);
             formData.append('area', document.getElementById('area').value);
             formData.append('pmrr', document.getElementById('pmrr').value);
 
@@ -381,7 +392,7 @@
         var tam = 40 //Tamanho do ícone
         var met = tam/2 //Colocação do ícone relativa a localização real
 
-        var Baixa = L.icon({
+        var greenCircle = L.icon({
             iconUrl: '/static/imagens/green_cl.png',
 
             iconSize:     [tam, tam],
@@ -389,7 +400,31 @@
             popupAnchor:  [-1, -1]
         });
 
-        var Média = L.icon({
+        var greenSquare = L.icon({
+            iconUrl: '/static/imagens/green_sq.png',
+
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
+        });
+
+        var greenTriangle = L.icon({
+            iconUrl: '/static/imagens/green_tr.png',
+
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
+        });
+
+        var yellowCircle = L.icon({
+            iconUrl: '/static/imagens/yellow_cl.png',
+
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
+        });
+
+        var yellowSquare = L.icon({
             iconUrl: '/static/imagens/yellow_sq.png',
 
             iconSize:     [tam, tam],
@@ -397,7 +432,31 @@
             popupAnchor:  [-1, -1]
         });
 
-        var Alta = L.icon({
+        var yellowTriangle = L.icon({
+            iconUrl: '/static/imagens/yellow_tr.png',
+
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
+        });
+
+        var redCircle = L.icon({
+            iconUrl: '/static/imagens/red_cl.png',
+
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
+        });
+
+        var redSquare = L.icon({
+            iconUrl: '/static/imagens/red_sq.png',
+
+            iconSize:     [tam, tam],
+            iconAnchor:   [met, met],
+            popupAnchor:  [-1, -1]
+        });
+
+        var redTriangle = L.icon({
             iconUrl: '/static/imagens/red_tr.png',
 
             iconSize:     [tam, tam],
