@@ -36,7 +36,7 @@ def home():
                'Vistoria em equipamento público', 'Vistoria em leito de rio']
     tecnico_operacional = ['Monitoramento', 'Risco de Queda de árvore']
     operacional = ['Manejo de animal silvestre', 'Alagamento/Inundação/Enchente', 'Deslizamento', 'Destelhamento',
-                   'Incêndio em vegetação', 'Incêndio em edificação', 'Apoio Marítmo', 'Outros']
+                   'Incêndio em vegetação', 'Incêndio em edificação', 'Apoio Marítmo', 'Queda de árvore', 'Outros']
     # Passando o tipo de marcador a ser usado com base na situacao e tipo_ocorrencia do banco de dados
     for m in marca:
         if m[5] in tecnico:
