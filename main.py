@@ -32,15 +32,21 @@ def home():
         temp2[1] = temp2[1].strftime('%d/%m/%Y')
         marca.append(temp2[:])
         temp2.clear()
+    tecnico = ['Avaliação de risco estrutural', 'Avaliação de risco geológico', 'Avaliação de risco hidrológico',
+               'Vistoria em equipamento público', 'Vistoria em leito de rio']
+    tecnico_operacional = ['Monitoramento', 'Risco de Queda de árvore']
+    operacional = ['Manejo de animal silvestre', 'Alagamento/Inundação/Enchente', 'Deslizamento', 'Destelhamento',
+                   'Incêndio em vegetação', 'Incêndio em edificação', 'Apoio Marítmo', 'Outros']
+    # Passando o tipo de marcador a ser usado com base na situacao e tipo_ocorrencia do banco de dados
     for m in marca:
-        if m[5] == 'Risco estrutural e geologia':
+        if m[5] in tecnico:
             if m[4] == 'Concluído':
                 m[4] = 'greenSquare'
             elif m[4] == 'Visitado':
                 m[4] = 'yellowSquare'
             else:
                 m[4] = 'redSquare'
-        elif m[5] == 'Queda de árvore':
+        elif m[5] in tecnico_operacional:
             if m[4] == 'Concluído':
                 m[4] = 'greenTriangle'
             elif m[4] == 'Visitado':
