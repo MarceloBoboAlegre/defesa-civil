@@ -145,6 +145,11 @@ def gerar_pdf():
     return send_file(f'{cadastro_nome}.pdf', as_attachment=True, download_name=f"Cadastro_{cadastroo['nome']}.pdf", mimetype="application/pdf")
 
 
+@app.route('/info')
+def get_info():
+    return render_template('info.html')
+
+
 # Iniciar o servidor Flask
 if __name__ == '__main__':
     app.run(debug=True)
