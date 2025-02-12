@@ -332,7 +332,7 @@
                 formData.append('imagens', imagens[i]);
             }
 
-            fetch('https://defesa-civil-00ed66d5f82a.herokuapp.com/cadastrar', {
+            fetch('http://127.0.0.1:5000/cadastrar', {
                 method: 'POST',
                 body: formData
             })
@@ -355,7 +355,7 @@
         function buscarCadastroPDF(id_busca) {
             const searchID = id_busca;
 
-            fetch(`https://defesa-civil-00ed66d5f82a.herokuapp.com/gerar_pdf?id=${searchID}`)
+            fetch(`http://127.0.0.1:5000/gerar_pdf?id=${searchID}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Erro ao gerar o PDF");
                     return response.blob();
