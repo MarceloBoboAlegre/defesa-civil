@@ -1,11 +1,13 @@
 import mysql.connector
+import bcrypt
+
 
 
 def conectar_bd():
     database = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='',
+        password='Coisadenerd2431$',
         database='defesa'
     )
     return database
@@ -81,3 +83,45 @@ def cadastro(data, origem, nome, documento, telefone1, telefone2, email,
             myc.execute(sql_imagem, (cadastro_id, imagem.filename))
             db.commit()
     turnoff(myc, db)
+
+
+def cadastro_user(nome, senha, email, telefone, status, nivel_acesso):
+    db = conectar_bd()
+    myc = cursor_on(db)
+
+    #codificando senha
+    sen = senha.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hash_senha = bcrypt.hashpw(sen, salt)
+
+    # Inserindo informações no Banco de dados
+    sql = ('INSERT INTO usuario (nome, PASSWORD_HASH, email, telefone, status, nivel_acesso) VALUES (%s, %s, %s, %s, %s, %s)')
+    val = (nome, hash_senha, email, telefone, status, nivel_acesso)
+    myc.execute(sql, val)
+    db.commit()
+
+    turnoff(myc, db)
+
+
+def login_user(nome, senha):
+    db = conectar_bd()
+    myc = cursor_on(db)
+    sql = 'SELECT * FROM usuario WHERE NOME = %s'
+    prc = (nome, )
+    sen = senha.encode('utf-8')
+    try:
+        myc.execute(sql, prc)
+        res = myc.fetchone()
+    except Exception as erro:
+        print(f'Usuário não encontrado! {erro.__class__}')
+    else:
+        try: 
+            if bcrypt.checkpw(sen, res[2].encode('utf-8')):
+                turnoff(myc, db)
+                return True
+            else:
+                turnoff(myc, db)
+                return False
+        except:
+            turnoff(myc, db)
+            return False

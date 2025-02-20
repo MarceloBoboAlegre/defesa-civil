@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, send_file, redirect
-from uteis import cadastro, get_markers, gerador_pdf
+from uteis import cadastro, get_markers, gerador_pdf, cadastro_user, login_user
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 CORS(app)  # Permite CORS para todas as rotas e origens
-app.config['SECRET_KEY'] = 'CivDef321'
+app.config['SECRET_KEY'] = 'CivDef2341'
 
 # Configuração da pasta onde as imagens serão salvas
 UPLOAD_FOLDER = 'uploads'
@@ -18,51 +18,76 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Criar a pasta de uploads se não existir
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Checar se está logado
+logado = False
+
 # Rota padrão
 @app.route('/')
 def home():
-    temp = get_markers()
+    if logado:
+        temp = get_markers()
 
-    # Transformando as tuplas em listas para poder transformar a data em string
-    marca = []
-    temp2 = []
-    for t in temp:
-        for i in t:
-            temp2.append(i)
-        temp2[1] = temp2[1].strftime('%d/%m/%Y')
-        marca.append(temp2[:])
-        temp2.clear()
-    tecnico = ['Avaliação de risco estrutural', 'Avaliação de risco geológico', 'Avaliação de risco hidrológico',
-               'Vistoria em equipamento público', 'Vistoria em leito de rio']
-    tecnico_operacional = ['Monitoramento', 'Risco de Queda de árvore']
-    operacional = ['Manejo de animal silvestre', 'Alagamento/Inundação/Enchente', 'Deslizamento', 'Destelhamento',
-                   'Incêndio em vegetação', 'Incêndio em edificação', 'Apoio Marítmo', 'Queda de árvore', 'Outros']
-    # Passando o tipo de marcador a ser usado com base na situacao e tipo_ocorrencia do banco de dados
-    for m in marca:
-        if m[5] in tecnico:
-            if m[4] == 'Concluído':
-                m[4] = 'greenSquare'
-            elif m[4] == 'Visitado':
-                m[4] = 'yellowSquare'
+        # Transformando as tuplas em listas para poder transformar a data em string
+        marca = []
+        temp2 = []
+        for t in temp:
+            for i in t:
+                temp2.append(i)
+            temp2[1] = temp2[1].strftime('%d/%m/%Y')
+            marca.append(temp2[:])
+            temp2.clear()
+        tecnico = ['Avaliação de risco estrutural', 'Avaliação de risco geológico', 'Avaliação de risco hidrológico',
+                'Vistoria em equipamento público', 'Vistoria em leito de rio']
+        tecnico_operacional = ['Monitoramento', 'Risco de Queda de árvore']
+        operacional = ['Manejo de animal silvestre', 'Alagamento/Inundação/Enchente', 'Deslizamento', 'Destelhamento',
+                    'Incêndio em vegetação', 'Incêndio em edificação', 'Apoio Marítmo', 'Queda de árvore', 'Outros']
+        # Passando o tipo de marcador a ser usado com base na situacao e tipo_ocorrencia do banco de dados
+        for m in marca:
+            if m[5] in tecnico:
+                if m[4] == 'Concluído':
+                    m[4] = 'greenSquare'
+                elif m[4] == 'Visitado':
+                    m[4] = 'yellowSquare'
+                else:
+                    m[4] = 'redSquare'
+            elif m[5] in tecnico_operacional:
+                if m[4] == 'Concluído':
+                    m[4] = 'greenTriangle'
+                elif m[4] == 'Visitado':
+                    m[4] = 'yellowTriangle'
+                else:
+                    m[4] = 'redTriangle'
             else:
-                m[4] = 'redSquare'
-        elif m[5] in tecnico_operacional:
-            if m[4] == 'Concluído':
-                m[4] = 'greenTriangle'
-            elif m[4] == 'Visitado':
-                m[4] = 'yellowTriangle'
-            else:
-                m[4] = 'redTriangle'
-        else:
-            if m[4] == 'Concluído':
-                m[4] = 'greenCircle'
-            elif m[4] == 'Visitado':
-                m[4] = 'yellowCircle'
-            else:
-                m[4] = 'redCircle'
-    quant = len(marca)
-    final = [quant, marca]
-    return render_template('index.html', marcador=final)
+                if m[4] == 'Concluído':
+                    m[4] = 'greenCircle'
+                elif m[4] == 'Visitado':
+                    m[4] = 'yellowCircle'
+                else:
+                    m[4] = 'redCircle'
+        quant = len(marca)
+        final = [quant, marca]
+        return render_template('index.html', marcador=final)
+    else:
+        return redirect('/entrar')
+
+
+# Rota para Login
+@app.route('/entrar')
+def entrar():
+    return render_template('login.html')
+
+
+# Rota ao clicar em login
+@app.route('/login', methods=['POST'])
+def login():
+    nome = request.form.get('nome')
+    senha = request.form.get('senha')
+    global logado
+    logado = login_user(nome, senha)
+    if logado:
+        return redirect('/')
+    else:
+        return redirect('/entrar')
 
 # Rota para receber os dados do formulário e cadastrar no banco de dados
 @app.route('/cadastrar', methods=['POST'])
