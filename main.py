@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, send_file, redirect, jsonify
-from uteis import cadastro, get_markers, gerador_pdf, cadastro_user, login_user
+from uteis import cadastro, get_markers, gerador_pdf, cadastro_user, login_user, get_usuario_id, make_notif, get_notif
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -20,12 +20,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Checar se está logado
 logado = False
-
-notificacoes = [
-    {"mensagem": "Nova mensagem de Ana."},
-    {"mensagem": "Atualização disponível."},
-    {"mensagem": "Backup concluído com sucesso."}
-]
+usuario = ''
 
 # Rota padrão
 @app.route('/')
@@ -91,6 +86,8 @@ def login():
     global logado
     logado = login_user(nome, senha)
     if logado:
+        global usuario
+        usuario = nome
         return redirect('/')
     else:
         return redirect('/entrar')
@@ -183,7 +180,9 @@ def get_info():
 
 @app.route('/notificacoes')
 def get_notificacoes():
-    return jsonify(notificacoes)
+    usuario_id = get_usuario_id(usuario)
+    notif = get_notif(usuario_id)
+    return jsonify(notif)
 
 
 # Iniciar o servidor Flask

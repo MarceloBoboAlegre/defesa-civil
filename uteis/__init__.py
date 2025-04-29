@@ -125,3 +125,37 @@ def login_user(nome, senha):
         except:
             turnoff(myc, db)
             return False
+
+
+def get_usuario_id(usuario):
+    db = conectar_bd()
+    myc = cursor_on(db)
+    sql = "SELECT id_user FROM usuario WHERE nome=%s"
+    myc.execute(sql, (usuario, ))
+    usuario_id = myc.fetchone()
+    turnoff(myc, db)
+    return int(usuario_id[0]) if usuario_id else None
+
+
+def make_notif(msg, user_id):
+    db = conectar_bd()
+    myc = cursor_on(db)
+    sql = ('INSERT INTO notificacoes (ID_USUARIO, MENSAGEM) VALUES(%s, %s)')
+    val = (user_id, msg)
+    myc.execute(sql, val)
+    db.commit()
+    turnoff(myc, db)
+
+
+def get_notif(user_id):
+    db = conectar_bd()
+    myc = cursor_on(db)
+    sql = "SELECT mensagem FROM notificacoes WHERE id_usuario=%s"
+    myc.execute(sql, (user_id, ))
+    notificacoes = myc.fetchall()
+    turnoff(myc, db)
+    resultado = []
+    for n in notificacoes:
+        resultado.append({"mensagem": n[0]})
+    print(resultado)
+    return resultado
