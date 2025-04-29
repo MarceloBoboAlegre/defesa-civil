@@ -398,7 +398,7 @@
                 formData.append('imagens', imagens[i]);
             }
 
-            fetch('http://127.0.0.1:5000/cadastrar', {
+            fetch('/cadastrar', {
                 method: 'POST',
                 body: formData
             })
@@ -421,7 +421,7 @@
         function buscarCadastroPDF(id_busca) {
             const searchID = id_busca;
 
-            fetch(`http://127.0.0.1:5000/gerar_pdf?id=${searchID}`)
+            fetch(`/gerar_pdf?id=${searchID}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Erro ao gerar o PDF");
                     return response.blob();
@@ -528,7 +528,7 @@
             var marker = L.marker([lat, lng], {icon: forma}).addTo(map);
             marker.bindPopup("<h5 id='PDFid' class='h6'>ID: {{ marcador[1][m][0] }}</h5>"+
             "<h5 class='h6'>Data: {{ marcador[1][m][1] }}</h5>"+
-            "<button class='btn btn-primary' onclick='buscarCadastroPDF({{ marcador[1][m][0] }})'>Gerar PDF</button>").openPopup();
+            "<button id='alterador' class='btn btn-primary' onclick='buscarCadastroPDF({{ marcador[1][m][0] }})'>Gerar PDF</button>").openPopup();
         </script>
     {% endfor %}
     <script>
