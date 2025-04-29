@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, redirect
+from flask import Flask, request, render_template, send_file, redirect, jsonify
 from uteis import cadastro, get_markers, gerador_pdf, cadastro_user, login_user
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
@@ -20,6 +20,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Checar se está logado
 logado = False
+
+notificacoes = [
+    {"mensagem": "Nova mensagem de Ana."},
+    {"mensagem": "Atualização disponível."},
+    {"mensagem": "Backup concluído com sucesso."}
+]
 
 # Rota padrão
 @app.route('/')
@@ -173,6 +179,11 @@ def gerar_pdf():
 @app.route('/info')
 def get_info():
     return render_template('info.html')
+
+
+@app.route('/notificacoes')
+def get_notificacoes():
+    return jsonify(notificacoes)
 
 
 # Iniciar o servidor Flask
